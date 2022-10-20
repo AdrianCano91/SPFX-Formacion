@@ -4,6 +4,7 @@ import {
   SPHttpClient,
   SPHttpClientResponse
 } from '@microsoft/sp-http';
+import { getSP } from './pnpjsConfig';
 import { Version } from '@microsoft/sp-core-library';
 import {
   IPropertyPaneConfiguration,
@@ -55,7 +56,7 @@ export default class FirstWebpartWebPart extends BaseClientSideWebPart<IFirstWeb
 
   protected onInit(): Promise<void> {
     this._environmentMessage = this._getEnvironmentMessage();
-
+    getSP(this.context);
     return super.onInit();
   }
 

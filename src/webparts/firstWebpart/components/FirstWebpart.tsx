@@ -8,14 +8,20 @@ import {
   SPHttpClientResponse
 } from '@microsoft/sp-http';
 import { ISPList } from '../Interfaces/ISPList';
+import { getSP } from "../pnpjsConfig";
+import { SPFI } from '@pnp/sp';
+import "@pnp/sp/sites";
+
 
 export default class FirstWebpart extends React.Component<IFirstWebpartProps, {items: any[]}> {
+  private _sp: SPFI;
 
   constructor(props: IFirstWebpartProps) {
     super(props);
     this.state = {
         items: [],       
       };
+      this._sp = getSP();
     debugger;
 }
 
@@ -26,14 +32,9 @@ export default class FirstWebpart extends React.Component<IFirstWebpartProps, {i
   }
 
   private async _getListData() {
-    return this.props.context.spHttpClient.get(this.props.context.pageContext.web.absoluteUrl + `/_api/web/lists?$filter=Hidden eq false`, SPHttpClient.configurations.v1)
-      .then(response => 
-        response.json()
-      ).then((result) => {
-        console.log("result", result)
-        this.setState({ items: result.value})
-        return result
-      });
+    const lists = await this._sp.web.lists();
+    console.log("lists", lists)
+    this.setState({ items: lists});
   }
 
   private _updateState(value: any[]) {
